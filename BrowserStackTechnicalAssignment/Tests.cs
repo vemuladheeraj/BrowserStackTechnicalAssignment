@@ -1,7 +1,9 @@
 ﻿using Framework;
+using Framework.Pages;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,16 +11,29 @@ using System.Threading.Tasks;
 namespace BrowserStackTechnicalAssignment
 {
     [TestFixture("chrome")]
+    [Parallelizable(ParallelScope.Fixtures)]
     public class Tests:TestBase
     {
         public Tests(string environment) : base(environment) 
         { }
 
         [Test]
-        public void SearchBstackDemo()
+        public void PrintProductDetails()
         {
-            driver.Navigate().GoToUrl("https://www.flipkart.com/");
-          
+            LoginPage login = new LoginPage(driver);
+            login.NavigateToWebSite().CloseLoginPopUp();
+            MobilePage mobile = new MobilePage(driver);
+            var searchFeed=mobile.SearchMobile();
+            List<SearchDetails> searchresults =mobile.GetMobileDetails();
+
+            foreach (var item in searchresults)
+            {
+                Console.WriteLine($"Product name: {item.Name} Product Link: {item.Link} Product Price: {item.Price}");
+            }
+
+            Assert.IsTrue(searchFeed.Count >= 1, $"The search feed contains less than 1 record {searchFeed.Count}");
+
+            Assert.IsTrue(searchresults.Count >= 1, $"The search results contains less than 1 record {searchresults.Count}");
         }
 
     }

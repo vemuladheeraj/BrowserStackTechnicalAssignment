@@ -24,6 +24,8 @@ namespace Framework
         protected string environment;
         private Local browserStackLocal;
 
+        public static Dictionary<string, string> ConfigurationValue { get; private set; }
+        public static Dictionary<string, string> TestData { get; private set; }
         public TestBase(string environment)
         {
             this.environment = environment;
@@ -45,15 +47,33 @@ namespace Framework
                     return new ChromeOptions();
             }
         }
+        [OneTimeSetUp]
+        public void ConfigurationValuesAndTestData()
+        {
+            NameValueCollection configValues = ConfigurationManager.AppSettings;
+            Dictionary<string, string> configurationValue = new Dictionary<string, string>();
+            foreach (var key in configValues.AllKeys)
+            {
+                configurationValue.Add(key, configValues[key]);
+            }
+            ConfigurationValue=configurationValue;
+
+            Dictionary<string, string> testData = new Dictionary<string, string>();
+            NameValueCollection testdata = ConfigurationManager.GetSection("testData/" + "data") as NameValueCollection;
+
+            foreach (var key in testdata.AllKeys)
+            {
+                testData.Add(key, testdata[key]);
+            }
+            TestData= testData;
+        }
+
 
         [SetUp]
         public void Init()
         {
-            NameValueCollection caps =
-                ConfigurationManager.GetSection("capabilities/" + "parallel") as NameValueCollection;
-            NameValueCollection settings =
-                ConfigurationManager.GetSection("environments/" + environment)
-                    as NameValueCollection;
+            NameValueCollection caps =  ConfigurationManager.GetSection("capabilities/" + "parallel") as NameValueCollection;
+            NameValueCollection settings = ConfigurationManager.GetSection("environments/" + environment) as NameValueCollection;
             DriverOptions capability = getBrowserOption(settings["browser"]);
 
             capability.BrowserVersion = "latest";
@@ -106,7 +126,7 @@ namespace Framework
                 driver = new ChromeDriver(chromeOptions);
             }
 
-
+            driver.Manage().Window.Maximize();
         }
 
         [TearDown]
