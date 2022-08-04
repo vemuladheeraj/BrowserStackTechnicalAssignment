@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace BrowserStackTechnicalAssignment
 {
-    [TestFixture("chrome")]
+    [TestFixture("chrome")]    
     [Parallelizable(ParallelScope.Fixtures)]
-    public class Tests:TestBase
+    public class Tests : TestBase
     {
-        public Tests(string environment) : base(environment) 
+        public Tests(string environment) : base(environment)
         { }
 
         [Test]
@@ -22,16 +22,13 @@ namespace BrowserStackTechnicalAssignment
         {
             LoginPage login = new LoginPage(driver);
             login.NavigateToWebSite().CloseLoginPopUp();
-            MobilePage mobile = new MobilePage(driver);
-            var searchFeed=mobile.SearchMobile();
-            List<SearchDetails> searchresults =mobile.GetMobileDetails();
+            MobilePage mobile = new MobilePage(driver);            
+            List<SearchDetails> searchresults = mobile.SearchMobile().GetMobileDetails();
 
             foreach (var item in searchresults)
             {
-                Console.WriteLine($"Product name: {item.Name} Product Link: {item.Link} Product Price: {item.Price}");
+                System.Diagnostics.Debug.WriteLine($"Product name: {item.Name} || Product Link: {item.Link} || Product Price: {item.Price}");
             }
-
-            Assert.IsTrue(searchFeed.Count >= 1, $"The search feed contains less than 1 record {searchFeed.Count}");
 
             Assert.IsTrue(searchresults.Count >= 1, $"The search results contains less than 1 record {searchresults.Count}");
         }

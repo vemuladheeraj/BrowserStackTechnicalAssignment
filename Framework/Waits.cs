@@ -46,7 +46,7 @@ namespace Framework
             {
                 WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeOutSec));
                 wait.PollingInterval = TimeSpan.FromSeconds(2);
-                wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(ElementNotVisibleException), typeof(ElementClickInterceptedException));
+                wait.IgnoreExceptionTypes(typeof(NotFoundException),typeof(NoSuchElementException), typeof(ElementNotVisibleException), typeof(ElementClickInterceptedException));
                 var element = wait.Until(condition =>
                 {
                     try
@@ -58,12 +58,7 @@ namespace Framework
                     {
 
                         return false;
-                    }
-                    catch (NoSuchElementException)
-                    {
-
-                        return false;
-                    }
+                    }                   
                 });
             }
             catch (Exception ex)
@@ -80,7 +75,7 @@ namespace Framework
             {
                 WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeOutSec));
                 wait.PollingInterval = TimeSpan.FromSeconds(2);
-                wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(ElementNotVisibleException), typeof(ElementClickInterceptedException));
+                wait.IgnoreExceptionTypes(typeof(NotFoundException),typeof(NoSuchElementException), typeof(ElementNotVisibleException), typeof(ElementClickInterceptedException));
                 var element = wait.Until(condition =>
                 {
                     try

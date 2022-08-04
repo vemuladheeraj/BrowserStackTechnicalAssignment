@@ -77,8 +77,7 @@ namespace Framework
             DriverOptions capability = getBrowserOption(settings["browser"]);
 
             capability.BrowserVersion = "latest";
-            System.Collections.Generic.Dictionary<string, object> browserstackOptions =
-              new Dictionary<string, object>();
+            Dictionary<string, object> browserstackOptions = new Dictionary<string, object>();
 
             foreach (string key in caps.AllKeys)
             {
@@ -103,24 +102,19 @@ namespace Framework
             if (caps.Get("local").ToString() == "true")
             {
                 browserStackLocal = new Local();
-                List<KeyValuePair<string, string>> bsLocalArgs = new List<
-                  KeyValuePair<string, string>
-                >()
-        {
-          new KeyValuePair<string, string>("key", accesskey)
-        };
+                List<KeyValuePair<string, string>> bsLocalArgs = new List<KeyValuePair<string, string>>()
+                {
+                    new KeyValuePair<string, string>("key", accesskey)
+                };
                 browserStackLocal.start(bsLocalArgs);
             }
-            if (caps.Get("localmachine").ToString() != "true")
+            if (ConfigurationValue["localMachine"] != "true")
             {
                 capability.AddAdditionalOption("bstack:options", browserstackOptions);
-                driver = new RemoteWebDriver(
-                  new Uri("http://" + ConfigurationManager.AppSettings.Get("server") + "/wd/hub/"),
-                  capability
-                );
+                driver = new RemoteWebDriver(new Uri("http://" + ConfigurationManager.AppSettings.Get("server") + "/wd/hub/"),capability);
             }
 
-            if (caps.Get("localmachine").ToString() == "true")
+            if (ConfigurationValue["localMachine"] == "true")
             {
                 var chromeOptions = new ChromeOptions();
                 driver = new ChromeDriver(chromeOptions);
