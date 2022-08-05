@@ -1,52 +1,45 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Framework
 {
     public class Waits
     {
-        public static void WaitForpageLoad(IWebDriver driver, By locator, int timeOutSec = 10)
+        public static void WaitForpageLoad(IWebDriver driver, By locator, int timeOutSec = 30)
         {
             try
             {
                 WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeOutSec));
-               // wait.Until(x=>x.((IJavascriptExecutor)wd).executeScript("return document.readyState").equals("complete"));
+                // wait.Until(x=>x.((IJavascriptExecutor)wd).executeScript("return document.readyState").equals("complete"));
             }
             catch (Exception ex)
             {
-
                 throw;
             }
         }
 
-
-        public static void WaitTillElementVisible(IWebDriver driver, By locator, int timeOutSec = 10)
-        {
-            try
-            {
-                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeOutSec));
-                wait.PollingInterval= TimeSpan.FromSeconds(2);
-                InternalWaitForVisible(driver, locator, timeOutSec, wait);
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
-        }
-
-        public static void TextToBePresentInElement(IWebDriver driver, By locator, string searchText,int timeOutSec = 10)
+        public static void WaitTillElementVisible(IWebDriver driver, By locator, int timeOutSec = 30)
         {
             try
             {
                 WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeOutSec));
                 wait.PollingInterval = TimeSpan.FromSeconds(2);
-                wait.IgnoreExceptionTypes(typeof(NotFoundException),typeof(NoSuchElementException), typeof(ElementNotVisibleException), typeof(ElementClickInterceptedException));
+                InternalWaitForVisible(driver, locator, timeOutSec, wait);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public static void TextToBePresentInElement(IWebDriver driver, By locator, string searchText, int timeOutSec = 30)
+        {
+            try
+            {
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeOutSec));
+                wait.PollingInterval = TimeSpan.FromSeconds(2);
+                wait.IgnoreExceptionTypes(typeof(NotFoundException), typeof(NoSuchElementException), typeof(ElementNotVisibleException), typeof(ElementClickInterceptedException));
                 var element = wait.Until(condition =>
                 {
                     try
@@ -56,26 +49,23 @@ namespace Framework
                     }
                     catch (StaleElementReferenceException)
                     {
-
                         return false;
-                    }                   
+                    }
                 });
             }
             catch (Exception ex)
             {
-
                 throw;
             }
-            
         }
 
-        public static void WaitTillElementClickable(IWebDriver driver, By locator, int timeOutSec = 10)
+        public static void WaitTillElementClickable(IWebDriver driver, By locator, int timeOutSec = 30)
         {
             try
             {
                 WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeOutSec));
                 wait.PollingInterval = TimeSpan.FromSeconds(2);
-                wait.IgnoreExceptionTypes(typeof(NotFoundException),typeof(NoSuchElementException), typeof(ElementNotVisibleException), typeof(ElementClickInterceptedException));
+                wait.IgnoreExceptionTypes(typeof(NotFoundException), typeof(NoSuchElementException), typeof(ElementNotVisibleException), typeof(ElementClickInterceptedException));
                 var element = wait.Until(condition =>
                 {
                     try
@@ -85,21 +75,20 @@ namespace Framework
                     }
                     catch (StaleElementReferenceException)
                     {
-
                         return false;
                     }
                 });
             }
             catch (Exception ex)
             {
-
                 throw;
             }
         }
-        private static void InternalWaitForVisible(IWebDriver driver,By locator,int timeOutSec, WebDriverWait wait)
+
+        private static void InternalWaitForVisible(IWebDriver driver, By locator, int timeOutSec, WebDriverWait wait)
         {
             wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeOutSec));
-            wait.IgnoreExceptionTypes(typeof(NoSuchElementException),typeof(ElementNotVisibleException));
+            wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(ElementNotVisibleException));
             var element = wait.Until(condition =>
             {
                 try
@@ -109,7 +98,6 @@ namespace Framework
                 }
                 catch (StaleElementReferenceException)
                 {
-
                     return false;
                 }
             });

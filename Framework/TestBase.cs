@@ -1,5 +1,4 @@
-﻿using BrowserStack;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
@@ -10,43 +9,28 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Framework
 {
+    [TestFixture]
     public class TestBase
     {
-
         protected IWebDriver driver;
 
-        protected string environment;
-        private Local browserStackLocal;
+        protected string browser;
+        protected string os;
+        protected string osversion;
 
         public static Dictionary<string, string> ConfigurationValue { get; private set; }
         public static Dictionary<string, string> TestData { get; private set; }
-        public TestBase(string environment)
+
+        public TestBase(string browser, string os, string osversion)
         {
-            this.environment = environment;
+            this.browser = browser;
+            this.os = os;
+            this.osversion = osversion;
         }
 
-        static DriverOptions getBrowserOption(String browser)
-        {
-            switch (browser)
-            {
-                case "chrome":
-                    return new ChromeOptions();
-                case "firefox":
-                    return new FirefoxOptions();
-                case "safari":
-                    return new SafariOptions();
-                case "edge":
-                    return new EdgeOptions();
-                default:
-                    return new ChromeOptions();
-            }
-        }
         [OneTimeSetUp]
         public void ConfigurationValuesAndTestData()
         {
@@ -56,7 +40,7 @@ namespace Framework
             {
                 configurationValue.Add(key, configValues[key]);
             }
-            ConfigurationValue=configurationValue;
+            ConfigurationValue = configurationValue;
 
             Dictionary<string, string> testData = new Dictionary<string, string>();
             NameValueCollection testdata = ConfigurationManager.GetSection("testData/" + "data") as NameValueCollection;
@@ -65,59 +49,107 @@ namespace Framework
             {
                 testData.Add(key, testdata[key]);
             }
-            TestData= testData;
+            TestData = testData;
         }
-
 
         [SetUp]
         public void Init()
         {
-            NameValueCollection caps =  ConfigurationManager.GetSection("capabilities/" + "parallel") as NameValueCollection;
-            NameValueCollection settings = ConfigurationManager.GetSection("environments/" + environment) as NameValueCollection;
-            DriverOptions capability = getBrowserOption(settings["browser"]);
-
-            capability.BrowserVersion = "latest";
-            Dictionary<string, object> browserstackOptions = new Dictionary<string, object>();
-
-            foreach (string key in caps.AllKeys)
+            String BROWSERSTACK_USERNAME = String.IsNullOrEmpty(Environment.GetEnvironmentVariable("BROWSERSTACK_USERNAME"))? ConfigurationManager.AppSettings["user"]: Environment.GetEnvironmentVariable("BROWSERSTACK_USERNAME");
+            String BROWSERSTACK_ACCESS_KEY = String.IsNullOrEmpty(Environment.GetEnvironmentVariable("BROWSERSTACK_ACCESS_KEY")) ? ConfigurationManager.AppSettings["key"] : Environment.GetEnvironmentVariable("BROWSERSTACK_ACCESS_KEY");
+            switch (browser)
             {
-                browserstackOptions.Add(key, caps[key]);
-            }
+                case "Safari": //If browser is Safari, following capabilities will be passed to 'executetestwithcaps' function
+                    SafariOptions safariOptions = new SafariOptions();
+                    safariOptions.BrowserVersion = "latest";
+                    Dictionary<string, object> browserstackOptions = new Dictionary<string, object>();
+                    browserstackOptions.Add("os", os);
+                    browserstackOptions.Add("osVersion", osversion);
+                    browserstackOptions.Add("local", "false");
+                    browserstackOptions.Add("userName", BROWSERSTACK_USERNAME);
+                    browserstackOptions.Add("accessKey", BROWSERSTACK_ACCESS_KEY);
+                    browserstackOptions.Add("debug", true);
+                    browserstackOptions.Add("buildName", ConfigurationManager.AppSettings.Get("browserStackBuildName"));
+                    safariOptions.AddAdditionalOption("bstack:options", browserstackOptions);
+                    safariOptions.AddAdditionalOption("browserstack.consoleLogs", "info");
+                    driver = new RemoteWebDriver(new Uri("http://" + ConfigurationManager.AppSettings.Get("server") + "/wd/hub/"), safariOptions);
+                    break;
 
-            String username = Environment.GetEnvironmentVariable("BROWSERSTACK_USERNAME");
-            if (username == null)
-            {
-                username = ConfigurationManager.AppSettings.Get("user");
-            }
+                case "Chrome": //If browser is Chrome, following capabilities will be passed to 'executetestwithcaps' function
+                    if (ConfigurationManager.AppSettings["TestingInLocalMachine"] != "true")
+                    {
+                        ChromeOptions chromeOptions = new ChromeOptions();
+                        chromeOptions.BrowserVersion = "latest";
+                        Dictionary<string, object> browserstackOptionsChrome = new Dictionary<string, object>();
+                        browserstackOptionsChrome.Add("os", os);
+                        browserstackOptionsChrome.Add("osVersion", osversion);
+                        browserstackOptionsChrome.Add("local", "false");
+                        //browserstackOptionsChrome.Add("seleniumVersion", "3.14.0");
+                        browserstackOptionsChrome.Add("userName", BROWSERSTACK_USERNAME);
+                        browserstackOptionsChrome.Add("accessKey", BROWSERSTACK_ACCESS_KEY);
+                        browserstackOptionsChrome.Add("debug", true);
+                        browserstackOptionsChrome.Add("buildName", ConfigurationManager.AppSettings.Get("browserStackBuildName"));
+                        chromeOptions.AddAdditionalOption("bstack:options", browserstackOptionsChrome);
+                        chromeOptions.AddAdditionalOption("browserstack.consoleLogs", "info");
+                        driver = new RemoteWebDriver(new Uri("http://" + ConfigurationManager.AppSettings.Get("server") + "/wd/hub/"), chromeOptions);
+                    }
+                    else
+                    {
+                        driver = new ChromeDriver();
+                    }
+                    break;
 
-            String accesskey = Environment.GetEnvironmentVariable("BROWSERSTACK_ACCESS_KEY");
-            if (accesskey == null)
-            {
-                accesskey = ConfigurationManager.AppSettings.Get("key");
-            }
+                case "Firefox": //If browser is Firefox, following capabilities will be passed to 'executetestwithcaps' function
+                    FirefoxOptions firefoxOptions = new FirefoxOptions();
+                    firefoxOptions.BrowserVersion = "latest";
+                    Dictionary<string, object> browserstackOptionsFirefox = new Dictionary<string, object>();
+                    browserstackOptionsFirefox.Add("os", os);
+                    browserstackOptionsFirefox.Add("osVersion", osversion);
+                    browserstackOptionsFirefox.Add("local", "false");
+                    //browserstackOptionsFirefox.Add("seleniumVersion", "3.10.0");
+                    browserstackOptionsFirefox.Add("userName", BROWSERSTACK_USERNAME);
+                    browserstackOptionsFirefox.Add("accessKey", BROWSERSTACK_ACCESS_KEY);
+                    browserstackOptionsFirefox.Add("debug", true);
+                    browserstackOptionsFirefox.Add("buildName", ConfigurationManager.AppSettings.Get("browserStackBuildName"));
+                    firefoxOptions.AddAdditionalOption("bstack:options", browserstackOptionsFirefox);
 
-            browserstackOptions.Add("userName", username);
-            browserstackOptions.Add("accessKey", accesskey);
+                    driver = new RemoteWebDriver(new Uri("http://" + ConfigurationManager.AppSettings.Get("server") + "/wd/hub/"), firefoxOptions);
+                    break;
 
-            if (caps.Get("local").ToString() == "true")
-            {
-                browserStackLocal = new Local();
-                List<KeyValuePair<string, string>> bsLocalArgs = new List<KeyValuePair<string, string>>()
-                {
-                    new KeyValuePair<string, string>("key", accesskey)
-                };
-                browserStackLocal.start(bsLocalArgs);
-            }
-            if (ConfigurationValue["localMachine"] != "true")
-            {
-                capability.AddAdditionalOption("bstack:options", browserstackOptions);
-                driver = new RemoteWebDriver(new Uri("http://" + ConfigurationManager.AppSettings.Get("server") + "/wd/hub/"),capability);
-            }
+                case "Edge": //If browser is Edge, following capabilities will be passed to 'executetestwithcaps' function
+                    EdgeOptions edgeOptions = new EdgeOptions();
+                    edgeOptions.BrowserVersion = "latest";
+                    Dictionary<string, object> browserstackOptionsEdge = new Dictionary<string, object>();
+                    browserstackOptionsEdge.Add("os", os);
+                    browserstackOptionsEdge.Add("osVersion", osversion);
+                    browserstackOptionsEdge.Add("local", "false");
+                    //browserstackOptionsEdge.Add("seleniumVersion", "3.5.2");
+                    browserstackOptionsEdge.Add("userName", BROWSERSTACK_USERNAME);
+                    browserstackOptionsEdge.Add("accessKey", BROWSERSTACK_ACCESS_KEY);
+                    browserstackOptionsEdge.Add("debug", true);
+                    browserstackOptionsEdge.Add("buildName", ConfigurationManager.AppSettings.Get("browserStackBuildName"));
 
-            if (ConfigurationValue["localMachine"] == "true")
-            {
-                var chromeOptions = new ChromeOptions();
-                driver = new ChromeDriver(chromeOptions);
+                    edgeOptions.AddAdditionalOption("bstack:options", browserstackOptionsEdge);
+
+                    driver = new RemoteWebDriver(new Uri("http://" + ConfigurationManager.AppSettings.Get("server") + "/wd/hub/"), edgeOptions);
+                    break;
+
+                default:
+                    ChromeOptions chromeOptions1 = new ChromeOptions();
+                    chromeOptions1.BrowserVersion = "latest";
+                    Dictionary<string, object> browserstackOptionsDefault = new Dictionary<string, object>();
+                    browserstackOptionsDefault.Add("os", os);
+                    browserstackOptionsDefault.Add("osVersion", osversion);
+                    browserstackOptionsDefault.Add("local", "false");
+                    //browserstackOptionsDefault.Add("seleniumVersion", "3.14.0");
+                    browserstackOptionsDefault.Add("userName", BROWSERSTACK_USERNAME);
+                    browserstackOptionsDefault.Add("accessKey", BROWSERSTACK_ACCESS_KEY);
+                    browserstackOptionsDefault.Add("debug", true);
+                    browserstackOptionsDefault.Add("buildName", ConfigurationManager.AppSettings.Get("browserStackBuildName"));
+                    chromeOptions1.AddAdditionalOption("bstack:options", browserstackOptionsDefault);
+
+                    driver = new RemoteWebDriver(new Uri("http://" + ConfigurationManager.AppSettings.Get("server") + "/wd/hub/"), chromeOptions1);
+                    break;
             }
 
             driver.Manage().Window.Maximize();
@@ -126,11 +158,7 @@ namespace Framework
         [TearDown]
         public void Cleanup()
         {
-            driver.Quit();
-            if (browserStackLocal != null)
-            {
-                browserStackLocal.stop();
-            }
+            driver?.Quit();
         }
     }
 }
