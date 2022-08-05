@@ -15,8 +15,8 @@ jobs:
     - name: BrowserStack Action
       uses: 'vemuladheeraj/BrowserStackTechnicalAssignment@master'
       with:
-       username:  ${{BROWSERSTACK_USERNAME }}
-       access-key: ${{ BROWSERSTACK_ACCESS_KEY }}   
+       username:  ${{ secrets.BROWSERSTACK_USERNAME }}
+       access-key: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}   
 
     - uses: actions/checkout@v3
     - name: Setup .NET
