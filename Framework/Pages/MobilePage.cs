@@ -78,15 +78,7 @@ namespace Framework.Pages
                         IWebElement currentElement = allMobileDetails[i];
                         string mobileName = currentElement.FindElement(MobilePageLocators.mobileName).Text;
                         string price = currentElement.FindElement(MobilePageLocators.price).Text;
-                        //string[] values = null;
-                        //if (!_browser.ToLower().Contains("safari"))
-                        //{
-                        //    values= currentElement.Text.Split(new string[] { "\r\n" }, StringSplitOptions.None);
-                        //}
-                        //else
-                        //{
-                        //    values = currentElement.Text.Split(new string[] { "|" }, StringSplitOptions.None);
-                        //}
+                        //string[] values =currentElement.Text.Split(new string[] { "\r\n" }, StringSplitOptions.None);                       
 
                         SearchDetails searchDetails = new SearchDetails();
 
