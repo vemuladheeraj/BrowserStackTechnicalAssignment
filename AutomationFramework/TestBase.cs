@@ -57,7 +57,7 @@ namespace AutomationFramework
         {
             String BROWSERSTACK_USERNAME = String.IsNullOrEmpty(Environment.GetEnvironmentVariable("BROWSERSTACK_USERNAME")) ? ConfigurationManager.AppSettings["user"] : Environment.GetEnvironmentVariable("BROWSERSTACK_USERNAME");
             String BROWSERSTACK_ACCESS_KEY = String.IsNullOrEmpty(Environment.GetEnvironmentVariable("BROWSERSTACK_ACCESS_KEY")) ? ConfigurationManager.AppSettings["key"] : Environment.GetEnvironmentVariable("BROWSERSTACK_ACCESS_KEY");
-            var buildName = String.IsNullOrEmpty(Environment.GetEnvironmentVariable("BROWSERSTACK_BUILD_NAME")) ? Environment.GetEnvironmentVariable("browserStackBuildName") : Environment.GetEnvironmentVariable("BROWSERSTACK_BUILD_NAME");
+            var buildName = String.IsNullOrEmpty(Environment.GetEnvironmentVariable("BROWSERSTACK_BUILD_NAME")) ? ConfigurationManager.AppSettings.Get("browserStackBuildName") : Environment.GetEnvironmentVariable("BROWSERSTACK_BUILD_NAME");
             switch (browser)
             {
                 case "Safari": //If browser is Safari, following capabilities will be passed to 'executetestwithcaps' function
