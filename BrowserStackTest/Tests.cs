@@ -1,5 +1,6 @@
-﻿using Framework;
-using Framework.Pages;
+﻿
+using AutomationFramework;
+using AutomationFramework.Pages;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using System;

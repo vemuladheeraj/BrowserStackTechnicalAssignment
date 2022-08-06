@@ -1,4 +1,5 @@
-﻿.Locators;
+﻿
+using AutomationFramework.Locators;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System;
@@ -6,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-namespace Framework.Pages
+namespace AutomationFramework.Pages
 {
     public class MobilePage
     {

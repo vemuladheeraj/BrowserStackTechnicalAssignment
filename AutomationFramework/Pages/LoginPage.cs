@@ -1,8 +1,9 @@
-﻿.Locators;
+﻿
+using AutomationFramework.Locators;
 using OpenQA.Selenium;
 using System.Configuration;
 
-namespace Framework.Pages
+namespace AutomationFramework.Pages
 {
     public class LoginPage
     {

@@ -91,9 +91,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Framework\Framework.csproj">
-      <Project>{68f9eb59-985e-4545-9c4e-346ceb846cb6}</Project>
-      <Name>Framework</Name>
+    <ProjectReference Include="..\AutomationFramework\AutomationFramework.csproj">
+      <Project>{52a99e2f-589f-4afb-82f7-bae2fe588a2f}</Project>
+      <Name>AutomationFramework</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
