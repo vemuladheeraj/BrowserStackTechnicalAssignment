@@ -55,8 +55,9 @@ namespace Framework
         [SetUp]
         public void Init()
         {
-            String BROWSERSTACK_USERNAME = String.IsNullOrEmpty(Environment.GetEnvironmentVariable("BROWSERSTACK_USERNAME"))? ConfigurationManager.AppSettings["user"]: Environment.GetEnvironmentVariable("BROWSERSTACK_USERNAME");
+            String BROWSERSTACK_USERNAME = String.IsNullOrEmpty(Environment.GetEnvironmentVariable("BROWSERSTACK_USERNAME")) ? ConfigurationManager.AppSettings["user"] : Environment.GetEnvironmentVariable("BROWSERSTACK_USERNAME");
             String BROWSERSTACK_ACCESS_KEY = String.IsNullOrEmpty(Environment.GetEnvironmentVariable("BROWSERSTACK_ACCESS_KEY")) ? ConfigurationManager.AppSettings["key"] : Environment.GetEnvironmentVariable("BROWSERSTACK_ACCESS_KEY");
+            var buildName = String.IsNullOrEmpty(Environment.GetEnvironmentVariable("BROWSERSTACK_BUILD_NAME")) ? Environment.GetEnvironmentVariable("browserStackBuildName") : Environment.GetEnvironmentVariable("BROWSERSTACK_BUILD_NAME");
             switch (browser)
             {
                 case "Safari": //If browser is Safari, following capabilities will be passed to 'executetestwithcaps' function
@@ -69,7 +70,7 @@ namespace Framework
                     browserstackOptions.Add("userName", BROWSERSTACK_USERNAME);
                     browserstackOptions.Add("accessKey", BROWSERSTACK_ACCESS_KEY);
                     browserstackOptions.Add("debug", true);
-                    browserstackOptions.Add("buildName", ConfigurationManager.AppSettings.Get("browserStackBuildName"));
+                    browserstackOptions.Add("buildName", buildName);
                     safariOptions.AddAdditionalOption("bstack:options", browserstackOptions);
                     safariOptions.AddAdditionalOption("browserstack.consoleLogs", "info");
                     driver = new RemoteWebDriver(new Uri("http://" + ConfigurationManager.AppSettings.Get("server") + "/wd/hub/"), safariOptions);
@@ -88,7 +89,7 @@ namespace Framework
                         browserstackOptionsChrome.Add("userName", BROWSERSTACK_USERNAME);
                         browserstackOptionsChrome.Add("accessKey", BROWSERSTACK_ACCESS_KEY);
                         browserstackOptionsChrome.Add("debug", true);
-                        browserstackOptionsChrome.Add("buildName", ConfigurationManager.AppSettings.Get("browserStackBuildName"));
+                        browserstackOptionsChrome.Add("buildName", buildName);
                         chromeOptions.AddAdditionalOption("bstack:options", browserstackOptionsChrome);
                         chromeOptions.AddAdditionalOption("browserstack.consoleLogs", "info");
                         driver = new RemoteWebDriver(new Uri("http://" + ConfigurationManager.AppSettings.Get("server") + "/wd/hub/"), chromeOptions);
@@ -110,7 +111,7 @@ namespace Framework
                     browserstackOptionsFirefox.Add("userName", BROWSERSTACK_USERNAME);
                     browserstackOptionsFirefox.Add("accessKey", BROWSERSTACK_ACCESS_KEY);
                     browserstackOptionsFirefox.Add("debug", true);
-                    browserstackOptionsFirefox.Add("buildName", ConfigurationManager.AppSettings.Get("browserStackBuildName"));
+                    browserstackOptionsFirefox.Add("buildName", buildName);
                     firefoxOptions.AddAdditionalOption("bstack:options", browserstackOptionsFirefox);
 
                     driver = new RemoteWebDriver(new Uri("http://" + ConfigurationManager.AppSettings.Get("server") + "/wd/hub/"), firefoxOptions);
@@ -127,7 +128,7 @@ namespace Framework
                     browserstackOptionsEdge.Add("userName", BROWSERSTACK_USERNAME);
                     browserstackOptionsEdge.Add("accessKey", BROWSERSTACK_ACCESS_KEY);
                     browserstackOptionsEdge.Add("debug", true);
-                    browserstackOptionsEdge.Add("buildName", ConfigurationManager.AppSettings.Get("browserStackBuildName"));
+                    browserstackOptionsEdge.Add("buildName", buildName);
 
                     edgeOptions.AddAdditionalOption("bstack:options", browserstackOptionsEdge);
 
@@ -145,7 +146,7 @@ namespace Framework
                     browserstackOptionsDefault.Add("userName", BROWSERSTACK_USERNAME);
                     browserstackOptionsDefault.Add("accessKey", BROWSERSTACK_ACCESS_KEY);
                     browserstackOptionsDefault.Add("debug", true);
-                    browserstackOptionsDefault.Add("buildName", ConfigurationManager.AppSettings.Get("browserStackBuildName"));
+                    browserstackOptionsDefault.Add("buildName", buildName);
                     chromeOptions1.AddAdditionalOption("bstack:options", browserstackOptionsDefault);
 
                     driver = new RemoteWebDriver(new Uri("http://" + ConfigurationManager.AppSettings.Get("server") + "/wd/hub/"), chromeOptions1);
