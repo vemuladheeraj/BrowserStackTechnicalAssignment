@@ -6,12 +6,12 @@ namespace AutomationFramework
 {
     public class Waits
     {
-        public static void WaitForpageLoad(IWebDriver driver, By locator, int timeOutSec = 30)
+        public static void WaitForpageLoad(IWebDriver driver, int timeOutSec = 30)
         {
             try
             {
-                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeOutSec));
-                // wait.Until(x=>x.((IJavascriptExecutor)wd).executeScript("return document.readyState").equals("complete"));
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeOutSec));              
+                wait.Until(x => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete"));
             }
             catch (Exception ex)
             {

@@ -59,12 +59,6 @@ namespace BrowserStackTest
             }
         }
 
-        private static object[] FixtureArgs = {
-        new object[] { "Chrome","OS X","snow Leopard"},
-        new object[] { "FireFox", "Windows","10" },
-         new object[] { "Safari", "OS X", "snow Leopard" },
-          new object[] { "Chrome", "Windows","10" },
-           new object[] { "Chrome", "Windows","11" }
-    };
+
     }
 }

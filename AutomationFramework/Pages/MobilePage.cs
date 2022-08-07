@@ -55,7 +55,7 @@ namespace AutomationFramework.Pages
                 Waits.WaitTillElementClickable(_driver, MobilePageLocators.sortBy);
                 if (TestBase.TestData["sort"] == "H-L")
                 {
-                    _driver.FindElements(MobilePageLocators.sortBy).Where(x => x.Text.Contains("High to Low")).ToList()[0].Click();
+                    InterceptExceptionCheck("High to Low", wait);
                 }
 
                 wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete"));
@@ -104,6 +104,21 @@ namespace AutomationFramework.Pages
             {
                 throw;
             }
+        }
+
+
+        public void InterceptExceptionCheck(string value, WebDriverWait wait)
+        {
+            try
+            {
+                _driver.FindElements(MobilePageLocators.sortBy).Where(x => x.Text.Contains("High to Low")).ToList()[0].Click();
+            }
+            catch (ElementClickInterceptedException)
+            {
+                Waits.WaitTillElementClickable(_driver, MobilePageLocators.sortBy);
+                _driver.FindElements(MobilePageLocators.sortBy).Where(x => x.Text.Contains("High to Low")).ToList()[0].Click();
+            }
+
         }
     }
 }
